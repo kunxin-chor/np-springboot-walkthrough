@@ -1,5 +1,7 @@
 package com.example.demo.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,13 @@ public class ProductController {
   @Autowired
   public ProductController(ProductRepo productRepo) {
     this.productRepo = productRepo;
+  }
+
+  @GetMapping("/products")
+  public String listProducts(Model model) {
+    List<Product> products = productRepo.findAll();
+    model.addAttribute("products", products);
+    return "products/index";
   }
 
   @GetMapping("/products/create")
