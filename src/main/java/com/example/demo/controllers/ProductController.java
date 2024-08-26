@@ -41,7 +41,7 @@ public class ProductController {
 
   @PostMapping("/products/create")
   public String createProduct(@Valid @ModelAttribute Product newProduct, BindingResult bindingResult) {
-    
+
     // check if there's any result in validation
     if (bindingResult.hasErrors()) {
       return "products/create";
@@ -68,13 +68,28 @@ public class ProductController {
   }
 
   @PostMapping("/products/{id}/edit")
-  public String updateProduct( @PathVariable Long id, @Valid @ModelAttribute Product product, BindingResult bindingResult) {
-     
+  public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute Product product,
+      BindingResult bindingResult) {
+
     // check if there's any result in validation
-     if (bindingResult.hasErrors()) {
+    if (bindingResult.hasErrors()) {
       return "products/edit";
     }
     productRepo.save(product);
+    return "redirect:/products";
+  }
+
+  @GetMapping("/products/{id}/delete")
+  public String showDeleteProductForm(@PathVariable Long id, Model model) {
+    Product product = productRepo.findById(id)
+        .orElseThrow(() -> new RuntimeException("Product not found"));
+    model.addAttribute("product", product);
+    return "products/delete";
+  }
+
+  @PostMapping("/products/{id}/delete")
+  public String deleteProduct(@PathVariable Long id) {
+    productRepo.deleteById(id);
     return "redirect:/products";
   }
 
