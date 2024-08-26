@@ -1,15 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css"/>
-    <title>Document</title>
-</head>
-<body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: html(
+          ~{::title},
+          ~{::content},
+          ~{},
+          ~{}
+      )}"></html>
+
+<title>
+    Welcome to Atas TravelGear!
+</title>
+
+<th:block th:fragment="content">
     <h1>Welcome to my web page!</h1>
     <p>Stay a while and listen!</p>
     <p>Current date and time: <span th:text="${currentDateTime}"></span></p>
     <img src="founders.jpg"/>
-</body>
-</html>
+</th:fragment>
+      
