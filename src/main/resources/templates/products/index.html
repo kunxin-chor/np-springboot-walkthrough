@@ -23,7 +23,10 @@
                 <td th:text="${product.id}"></td>
                 <td th:text="${product.name}"></td>
                 <td th:text="${'$' + product.price}"></td>
-                <td><a th:href="@{/product/{id}(id=${product.id})}">View Details</a></td>
+                <td>
+                    <a th:href="@{/product/{id}(id=${product.id})}">View Details</a>
+                    <a th:href="@{/products/{id}/edit(id=${product.id})}">Edit</a>
+                </td>
             </tr>
         </tbody>
     </table>

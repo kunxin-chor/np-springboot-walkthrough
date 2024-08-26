@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +49,20 @@ public class ProductController {
         .orElseThrow(() -> new RuntimeException("Product not found"));
     model.addAttribute("product", product);
     return "products/details";
+  }
+
+  @GetMapping("/products/{id}/edit")
+  public String showUpdateProduct(@PathVariable Long id, Model model) {
+    Product product = productRepo.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+    model.addAttribute(product);
+    return "products/edit";
+
+  }
+
+  @PostMapping("/products/{id}/edit")
+  public String updateProduct(@PathVariable Long id, @ModelAttribute Product product) {
+    productRepo.save(product);
+    return "redirect:/products";
   }
 
 }
