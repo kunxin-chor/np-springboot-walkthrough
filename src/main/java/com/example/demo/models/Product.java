@@ -1,6 +1,10 @@
 package com.example.demo.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -11,13 +15,16 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    @NotBlank
+    @Size(min=2,max=100, message="Name must be between 2 and 100 characters")
     @Column(nullable = false)
     private String name;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @DecimalMin(value="0.01", message="Price must be greater than 0.01")
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.example.demo.models.Product;
 import com.example.demo.repo.ProductRepo;
 
+import jakarta.validation.Valid;
+
 @Controller
 public class ProductController {
 
@@ -38,7 +40,13 @@ public class ProductController {
   }
 
   @PostMapping("/products/create")
-  public String createProduct(@ModelAttribute Product newProduct) {
+  public String createProduct(@Valid @ModelAttribute Product newProduct, BindingResult bindingResult) {
+    
+    // check if there's any result in validation
+    if (bindingResult.hasErrors()) {
+      return "products/create";
+    }
+
     productRepo.save(newProduct);
     return "redirect:/products";
   }
@@ -60,7 +68,12 @@ public class ProductController {
   }
 
   @PostMapping("/products/{id}/edit")
-  public String updateProduct(@PathVariable Long id, @ModelAttribute Product product) {
+  public String updateProduct( @PathVariable Long id, @Valid @ModelAttribute Product product, BindingResult bindingResult) {
+     
+    // check if there's any result in validation
+     if (bindingResult.hasErrors()) {
+      return "products/edit";
+    }
     productRepo.save(product);
     return "redirect:/products";
   }
