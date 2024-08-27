@@ -6,7 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "products")
@@ -15,16 +17,16 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @NotBlank
-    @Size(min=2,max=100, message="Name must be between 2 and 100 characters")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     @Column(nullable = false)
     private String name;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @DecimalMin(value="0.01", message="Price must be greater than 0.01")
+    @DecimalMin(value = "0.01", message = "Price must be greater than 0.01")
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
@@ -32,8 +34,13 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
+    @JoinTable(name = "products_tags", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags = new HashSet<>();
+
     // Default constructor
-    public Product() {}
+    public Product() {
+    }
 
     // Constructor with all fields except id
     public Product(String name, String description, BigDecimal price) {
@@ -75,7 +82,6 @@ public class Product {
         this.price = price;
     }
 
-    
     public Category getCategory() {
         return category;
     }
@@ -83,6 +89,27 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public void addTag(Tag tag) {
+        this.tags.add(tag);
+        tag.getProducts().add(this);
+    }
+
+    public void removeTag(Tag tag) {
+        this.tags.remove(tag);
+        tag.getProducts().remove(this);
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+
+
 
     // toString method
     @Override
@@ -98,8 +125,10 @@ public class Product {
     // equals and hashCode methods
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Product product = (Product) o;
         return Objects.equals(id, product.id) &&
                 Objects.equals(name, product.name) &&

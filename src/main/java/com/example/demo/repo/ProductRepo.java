@@ -9,7 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ProductRepo extends JpaRepository<Product, Long> {
 
-    @Query("SELECT p FROM Product p LEFT JOIN FETCH p.category")
-    List<Product> findAllWithCategories();
+    // @Query("SELECT p FROM Product p LEFT JOIN FETCH p.category")
+    // List<Product> findAllWithCategories();
+
+    @Query("SELECT DISTINCT p FROM Product p " +
+            "LEFT JOIN FETCH p.category " +
+            "LEFT JOIN FETCH p.tags")
+    List<Product> findAllWithCategoriesAndTags();
 
 }
