@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import java.security.Principal;
 
 @Controller
 public class UserController {
@@ -35,5 +36,19 @@ public class UserController {
     public String login() {
         System.out.println("Login page requested");
         return "users/login";
+    }
+
+    @GetMapping("/profile")
+    public String showProfilePage(Model model, Principal principal) {
+        // Get the username of the logged-in user
+        String username = principal.getName();
+
+        // Fetch the user from the database using the username
+        User user = userService.findUserByUsername(username);
+
+        // Add user details to the model to be displayed on the profile page
+        model.addAttribute("user", user);
+
+        return "users/profile";
     }
 }

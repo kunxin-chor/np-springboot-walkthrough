@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
     th:fragment="html(title, content, additionalCss, additionalScripts)">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,13 +11,27 @@
     <!-- Any additional CSS -->
     <th:block th:replace="${additionalCss} ?: ~{}"></th:block>
 </head>
+
 <body>
     <header>
         <!-- Add your header content here -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
                 <a class="navbar-brand" href="#">Your App Name</a>
-                <!-- Add more navigation items as needed -->
+                <div class="navbar-nav ms-auto">
+                    <span class="nav-item nav-link" th:if="${isAuthenticated}">
+                        Welcome, <span th:text="${currentUser}"></span>!
+                    </span>
+                    <a class="nav-item nav-link" href="/login" th:unless="${isAuthenticated}">Login</a>
+                    <li class="nav-item" th:if="${isAuthenticated}"></li>
+                    <form id="logout-form" action="/logout" method="POST" style="display: inline;">
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                        <button type="submit" class="btn btn-link nav-link" style="display: inline; cursor: pointer;">
+                            Logout
+                        </button>
+                    </form>
+                    </li>
+                </div>
             </div>
         </nav>
     </header>
@@ -36,4 +51,5 @@
     <!-- Any additional JavaScript -->
     <th:block th:replace="${additionalScripts} ?: ~{}"></th:block>
 </body>
+
 </html>
