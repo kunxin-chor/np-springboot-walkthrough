@@ -26,20 +26,21 @@ public class StripeService {
     @Value("${stripe.api.publicKey}")
     private String stripePublicKey;
 
-
-
     @PostConstruct
     public void init() {
         Stripe.apiKey = stripeSecretKey;
     }
 
-    public Session createCheckoutSession(List<CartItem> cartItems, String successUrl, String cancelUrl) throws StripeException {
+    public Session createCheckoutSession(List<CartItem> cartItems, String successUrl, String cancelUrl)
+            throws StripeException {
         List<SessionCreateParams.LineItem> lineItems = new ArrayList<>();
 
         for (CartItem item : cartItems) {
             ProductData productData = ProductData
                     .builder()
                     .setName(item.getProduct().getName())
+                    .putMetadata("product_id",
+                            item.getProduct().getId().toString())
                     .build();
 
             PriceData priceData = PriceData
@@ -73,5 +74,5 @@ public class StripeService {
     public String getPublicKey() {
         return stripePublicKey;
     }
-    
+
 }
