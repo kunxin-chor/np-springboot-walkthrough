@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{
         base::html(
             ~{::title},
             ~{::content},
             ~{},
             ~{}
         )
-    }"
-
->
+    }">
 
 <title>Shopping Cart</title>
 
@@ -58,7 +55,12 @@
         </table>
         <div class="d-flex justify-content-between">
             <a href="/" class="btn btn-secondary">Continue Shopping</a>
-            <a href="/checkout" class="btn btn-primary">Proceed to Checkout</a>
+            <div class="d-flex justify-content-between">
+                <a href="/" class="btn btn-secondary">Continue Shopping</a>
+                <form th:action="@{/checkout/create-checkout-session}" method="get">
+                    <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
+                </form>
+            </div>
         </div>
     </div>
 </th:block>
