@@ -50,8 +50,7 @@ public class ProductController {
     }
     List<Product> products = productRepo.searchProducts(name, minPrice, maxPrice, category_id, tags,
         tags.size());
-    // List<Product> products = productRepo.searchProducts(name, minPrice, maxPrice,
-    // category_id);
+
     model.addAttribute("products", products);
     model.addAttribute("categories", categoryRepo.findAll());
     model.addAttribute("tags", tagRepo.findAll());
