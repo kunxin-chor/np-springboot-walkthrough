@@ -1,46 +1,72 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base :: html(
-          ~{::title},
-          ~{::content},
-          ~{},
-          ~{}
-      )}">
+    ~{::title},
+    ~{::content},
+    ~{},
+    ~{}
+)}">
 
 <title>All Products</title>
 
 <th:block th:fragment="content">
-    <h1>Product List</h1>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Category</th>
-                <th>Action</th>
-                <th>Tags</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="product : ${products}">
-                <td th:text="${product.id}"></td>
-                <td th:text="${product.name}"></td>
-                <td th:text="${'$' + product.price}"></td>
-                <td th:text="${product.category.name}"></td>
-                <td>
-                    <span th:each="tag : ${product.tags}" th:text="${tag.name}" class="badge text-bg-primary ms-1 me-1"></span>
-                </td>
-                <td>
-                    <a th:href="@{/products/{id}(id=${product.id})}">View Details</a>
-                    <a th:href="@{/products/{id}/edit(id=${product.id})}">Edit</a>
-                    <a th:href="@{/products/{id}/delete(id=${product.id})}">Delete</a>
-                    <form th:action="@{/cart/add}" method="post" class="d-inline">
-                        <input type="hidden" name="productId" th:value="${product.id}" />
-                        <input type="number" name="quantity" value="1" min="1" max="10" class="form-control form-control-sm d-inline" style="width: 60px;" />
-                        <button type="submit" class="btn btn-sm btn-success">Add to Cart</button>
-                  </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<h1>Product List</h1>
+
+<!-- Search Form -->
+<form action="#" th:action="@{/products}" method="get" class="mb-4">
+  <div class="row g-3">
+      <div class="col-md-2">
+          <input type="text" name="name" class="form-control" placeholder="Product Name" />
+      </div>
+      <div class="col-md-2">
+          <input type="number" name="minPrice" class="form-control" placeholder="Min Price" step="0.01" />
+      </div>
+      <div class="col-md-2">
+          <input type="number" name="maxPrice" class="form-control" placeholder="Max Price" step="0.01" />
+      </div>
+      <div class="col-md-2">
+          <input type="text" name="category" class="form-control" placeholder="Category" />
+      </div>
+      <div class="col-md-2">
+          <input type="text" name="tags" class="form-control" placeholder="Tags (comma separated)" />
+      </div>
+      <div class="col-md-2">
+          <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+  </div>
+</form>
+
+<!-- Products Table -->
+<table class="table">
+  <thead>
+      <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th>Tags</th>
+          <th>Action</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr th:each="product : ${products}">
+          <td th:text="${product.id}"></td>
+          <td th:text="${product.name}"></td>
+          <td th:text="${'$' + product.price}"></td>
+          <td th:text="${product.category.name}"></td>
+          <td>
+              <span th:each="tag : ${product.tags}" th:text="${tag.name}" class="badge text-bg-primary ms-1 me-1"></span>
+          </td>
+          <td>
+              <a th:href="@{/products/{id}(id=${product.id})}">View Details</a>
+              <a th:href="@{/products/{id}/edit(id=${product.id})}">Edit</a>
+              <a th:href="@{/products/{id}/delete(id=${product.id})}">Delete</a>
+              <form th:action="@{/cart/add}" method="post" class="d-inline">
+                  <input type="hidden" name="productId" th:value="${product.id}" />
+                  <input type="number" name="quantity" value="1" min="1" max="10" class="form-control form-control-sm d-inline" style="width: 60px;" />
+                  <button type="submit" class="btn btn-sm btn-success">Add to Cart</button>
+            </form>
+          </td>
+      </tr>
+  </tbody>
+</table>
 </th:block>
 </html>

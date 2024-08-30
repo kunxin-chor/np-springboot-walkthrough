@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,8 +38,12 @@ public class ProductController {
   }
 
   @GetMapping("/products")
-  public String listProducts(Model model) {
-    List<Product> products = productRepo.findAllWithCategoriesAndTags();
+  public String listProducts(@RequestParam(required = false) String name,
+                           @RequestParam(required = false) BigDecimal minPrice,
+                           @RequestParam(required = false) BigDecimal maxPrice,
+                           @RequestParam(required = false) String category,
+                           @RequestParam(required = false) List<String> tagsModel, Model model) {
+    List<Product> products = productRepo.searchProducts(name, minPrice, maxPrice, category, tagsModel, tagsModel.size());
     model.addAttribute("products", products);
     return "products/index";
   }
