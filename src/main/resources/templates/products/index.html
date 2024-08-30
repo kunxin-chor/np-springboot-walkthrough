@@ -23,10 +23,21 @@
           <input type="number" name="maxPrice" class="form-control" placeholder="Max Price" step="0.01" />
       </div>
       <div class="col-md-2">
-          <input type="text" name="category" class="form-control" placeholder="Category" />
+         <select name="category_id" class="form-select">
+            <option value="0">All Categories</option>
+            <option th:each="category : ${categories}" 
+                th:value="${category.id}"
+                th:text="${category.name}"
+                th:selected="${category.id == param.category_id}"></option>
+         </select>
       </div>
       <div class="col-md-2">
-          <input type="text" name="tags" class="form-control" placeholder="Tags (comma separated)" />
+        <select name="tags" class="form-select" multiple>            
+            <option th:each="tag : ${tags}" 
+                th:value="${tag.id}"
+                th:text="${tag.name}"
+                th:selected="${param.tags != null and param.tags.contains(tag.id)}"></option>
+         </select>
       </div>
       <div class="col-md-2">
           <button type="submit" class="btn btn-primary">Search</button>

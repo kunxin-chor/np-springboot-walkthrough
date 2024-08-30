@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +40,21 @@ public class ProductController {
 
   @GetMapping("/products")
   public String listProducts(@RequestParam(required = false) String name,
-                           @RequestParam(required = false) BigDecimal minPrice,
-                           @RequestParam(required = false) BigDecimal maxPrice,
-                           @RequestParam(required = false) String category,
-                           @RequestParam(required = false) List<String> tagsModel, Model model) {
-    List<Product> products = productRepo.searchProducts(name, minPrice, maxPrice, category, tagsModel, tagsModel.size());
+      @RequestParam(required = false) BigDecimal minPrice,
+      @RequestParam(required = false) BigDecimal maxPrice,
+      @RequestParam(required = false, defaultValue = "0") Long category_id,
+      @RequestParam(required = false) List<Long> tags, Model model) {
+
+    if (tags == null) {
+      tags = new ArrayList<Long>();
+    }
+    List<Product> products = productRepo.searchProducts(name, minPrice, maxPrice, category_id, tags,
+        tags.size());
+    // List<Product> products = productRepo.searchProducts(name, minPrice, maxPrice,
+    // category_id);
     model.addAttribute("products", products);
+    model.addAttribute("categories", categoryRepo.findAll());
+    model.addAttribute("tags", tagRepo.findAll());
     return "products/index";
   }
 
@@ -53,13 +63,13 @@ public class ProductController {
     model.addAttribute("product", new Product());
     model.addAttribute("categories", categoryRepo.findAll());
     model.addAttribute("allTags", tagRepo.findAll());
-      return "products/create";
+    return "products/create";
   }
 
   @PostMapping("/products/create")
-  public String createProduct(@Valid @ModelAttribute Product newProduct,  
-                              @RequestParam(required=false) List<Long> tagIds,
-                              BindingResult bindingResult, Model model) {
+  public String createProduct(@Valid @ModelAttribute Product newProduct,
+      @RequestParam(required = false) List<Long> tagIds,
+      BindingResult bindingResult, Model model) {
 
     // check if there's any result in validation
     if (bindingResult.hasErrors()) {
@@ -69,8 +79,8 @@ public class ProductController {
     }
 
     if (tagIds != null) {
-        Set<Tag> tags = new HashSet<>(tagRepo.findAllById(tagIds));
-        newProduct.setTags(tags);  
+      Set<Tag> tags = new HashSet<>(tagRepo.findAllById(tagIds));
+      newProduct.setTags(tags);
     }
 
     productRepo.save(newProduct);
@@ -96,7 +106,7 @@ public class ProductController {
   }
 
   @PostMapping("/products/{id}/edit")
-  public String updateProduct(@PathVariable Long id, 
+  public String updateProduct(@PathVariable Long id,
       @Valid @ModelAttribute Product product,
       @RequestParam List<Long> tagIds,
       BindingResult bindingResult,
@@ -115,7 +125,7 @@ public class ProductController {
       product.setTags(tags);
     } else {
       // remove all existing tags
-        product.getTags().clear();  
+      product.getTags().clear();
     }
 
     productRepo.save(product);
