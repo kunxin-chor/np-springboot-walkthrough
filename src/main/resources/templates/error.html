@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error</title>
+</head>
+<body>
+    <h1>Error Occurred</h1>
+    <p>An error occurred while processing your request.</p>
+    <p th:text="${'URL: ' + url}"></p>
+    <p th:text="${'Exception: ' + exception.message}"></p>
+    <p>Please contact support if the problem persists.</p>
+</body>
+</html>
